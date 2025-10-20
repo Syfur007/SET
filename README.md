@@ -82,173 +82,69 @@ all iterator-functions returns the current element or -1 if not exist.
 
 ## Usage Examples
 
-### Basic Set Operations
+### Add and Remove Elements
+See: [`allTest.ino`](examples/allTest/allTest.ino)
 
 ```cpp
-#include "set.h"
-
 Set mySet;
+mySet.add(10);
+mySet.add(20);
+mySet.add(30);
 
-void setup() {
-  Serial.begin(115200);
-  
-  // Add elements to the set
-  mySet.add(10);
-  mySet.add(20);
-  mySet.add(30);
-  
-  // Check element membership
-  if (mySet.has(20)) {
-    Serial.println("20 is in the set");
-  }
-  
-  // Remove an element
-  mySet.sub(20);
-  
-  // Get the number of elements
-  Serial.print("Set contains: ");
-  Serial.println(mySet.count());
-  
-  // Check if set is empty
-  if (!mySet.isEmpty()) {
-    Serial.println("Set is not empty");
-  }
+if (mySet.has(20)) {
+  Serial.println("20 is in the set");
 }
 
-void loop() {
-}
+mySet.sub(20);  // remove element
+Serial.println(mySet.count());
 ```
 
 ### Set Operations (Union, Intersection, Difference)
+See: [`interSectionTest.ino`](examples/interSectionTest/interSectionTest.ino)
 
 ```cpp
-#include "set.h"
-
 Set setA, setB, result;
-
-void setup() {
-  Serial.begin(115200);
-  
-  // Create set A: {1, 2, 3, 4, 5}
-  for (int i = 1; i <= 5; i++) {
-    setA.add(i);
-  }
-  
-  // Create set B: {4, 5, 6, 7, 8}
-  for (int i = 4; i <= 8; i++) {
-    setB.add(i);
-  }
-  
-  // Union: A ∪ B = {1, 2, 3, 4, 5, 6, 7, 8}
-  result = setA + setB;
-  Serial.print("Union count: ");
-  Serial.println(result.count());  // Output: 8
-  
-  // Intersection: A ∩ B = {4, 5}
-  result = setA * setB;
-  Serial.print("Intersection count: ");
-  Serial.println(result.count());  // Output: 2
-  
-  // Difference: A - B = {1, 2, 3}
-  result = setA - setB;
-  Serial.print("Difference count: ");
-  Serial.println(result.count());  // Output: 3
-  
-  // In-place operations also work
-  setA += setB;  // setA now contains union
+for (int i = 0; i < 150; i++) {
+  setA.add(random(256));
+  setB.add(random(256));
 }
 
-void loop() {
-}
+result = setA + setB;  // union
+result = setA * setB;  // intersection
+result = setA - setB;  // difference
+
+setA += setB;  // in-place union
 ```
 
-### Iterating Through a Set
+### Iterate Through a Set
+See: [`iterationTest.ino`](examples/iterationTest/iterationTest.ino)
 
 ```cpp
-#include "set.h"
-
 Set mySet;
-
-void setup() {
-  Serial.begin(115200);
-  
-  // Add some elements
-  mySet.add(5);
-  mySet.add(15);
-  mySet.add(25);
-  mySet.add(35);
-  
-  // Iterate forward through set
-  Serial.println("Forward iteration:");
-  int element = mySet.first();
-  while (element != -1) {
-    Serial.println(element);
-    element = mySet.next();
-  }
-  
-  // Iterate backward through set
-  Serial.println("Backward iteration:");
-  element = mySet.last();
-  while (element != -1) {
-    Serial.println(element);
-    element = mySet.prev();
-  }
-  
-  // Get the 2nd element
-  int second = mySet.getNth(2);
-  Serial.print("2nd element: ");
-  Serial.println(second);
+for (int i = 0; i < 10; i++) {
+  mySet.add(random(256));
 }
 
-void loop() {
+int n = mySet.first();
+while (n != -1) {
+  Serial.print(n);
+  Serial.print('\t');
+  n = mySet.next();
 }
 ```
 
 ### Set Comparison and Subset Testing
+See: [`subsetTest.ino`](examples/subsetTest/subsetTest.ino)
 
 ```cpp
-#include "set.h"
+Set setE;
+for (int i = 0; i < 5; i++) setE.add(i);
 
-Set setA, setB, setC;
+Set setF(setE);
+Serial.println(setE <= setF ? "subset" : "no subset");
 
-void setup() {
-  Serial.begin(115200);
-  
-  // Create test sets
-  setA.add(1);
-  setA.add(2);
-  setA.add(3);
-  
-  setB.add(1);
-  setB.add(2);
-  setB.add(3);
-  
-  setC.add(1);
-  setC.add(2);
-  setC.add(3);
-  setC.add(4);
-  
-  // Test equality
-  if (setA == setB) {
-    Serial.println("setA and setB are equal");
-  }
-  
-  if (setA != setC) {
-    Serial.println("setA and setC are not equal");
-  }
-  
-  // Test subset
-  if (setA <= setC) {
-    Serial.println("setA is a subset of setC");
-  }
-  
-  if (!(setC <= setA)) {
-    Serial.println("setC is NOT a subset of setA");
-  }
-}
-
-void loop() {
-}
+setF.add(6);
+Serial.println(setE <= setF ? "subset" : "no subset");
 ```
 
 ## Performance Considerations
@@ -293,8 +189,8 @@ See the `examples/` folder for complete working examples:
 
 #### Should
 
-
 #### Could
+
 
 
 ## Support
